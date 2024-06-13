@@ -1,5 +1,3 @@
-from django.db.models.base import Model as Model
-
 from django.shortcuts import get_object_or_404, redirect
 
 from blog.models import Post, Category, Profile, Comment
