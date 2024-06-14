@@ -7,8 +7,6 @@ from django.urls import reverse_lazy
 from django.db.models import Count
 from django.utils import timezone
 
-from datetime import datetime as dt
-
 from blog.forms import ProfileForm, CommentForm, PostForm
 from blog.models import Post, Category, Profile, Comment
 from blogicum.settings import COUNT_PER_PAGE
@@ -30,10 +28,7 @@ class IndexListView(ListView):
         posts = Post.published.annotate(
             comment_count=Count('comments')).order_by('-pub_date')
         return posts
-# Post.objects.annotate(comment_count=Count('comments')).filter(
-#             is_published=True,
-#             category__is_published=True,
-#             pub_date__lte=timezone.now()).order_by('-pub_date')
+
 
 class PostDetailView(DetailView):
     model = Post
