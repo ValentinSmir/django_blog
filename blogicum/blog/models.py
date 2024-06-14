@@ -1,5 +1,7 @@
 from django.db import models
 
+from django.utils import timezone
+
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -7,7 +9,10 @@ User = get_user_model()
 
 class PostManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().select_related(
+        return super().get_queryset().filter(pub_date__lte=timezone.now(),
+                                             is_published=True,
+                                             category__is_published=True
+                                             ).select_related(
             'location', 'author', 'category')
 
 
@@ -99,11 +104,27 @@ class Profile(models.Model):
 
 
 class Comment(models.Model):
-    text = models.TextField(verbose_name='Комментарии')
-    comment = models.ForeignKey(Post, on_delete=models.CASCADE,
-                                related_name='comments',)
-    created_at = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField(
+        verbose_name='Комментарии',
+        help_text=('Здесь можно написать содержимое комментария')
+    )
+    post = models.ForeignKey(
+        Post, null=True, on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name='Публикация',
+        help_text=('Публикация, к которой привязан комментарий')
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата и время отправки коментария',
+        help_text=('Дата и время, когда был отправлен комментарий')
+    )
+    author = models.ForeignKey(User, on_delete=models.CASCADE,
+                               verbose_name='Автор',
+                               help_text=('Автор комментария')
+                               )
 
     class Meta:
+        verbose_name = 'комментарий'
+        verbose_name_plural = 'Комментарии'
         ordering = ('created_at',)

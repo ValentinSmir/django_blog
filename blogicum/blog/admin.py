@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from blog.models import Category, Location, Post
+from blog.models import Category, Location, Post, Comment
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -16,6 +16,11 @@ class LocationAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
+class CommentAdmin(admin.ModelAdmin):
+    search_fields = ('text', 'author__username', 'created_at', 'post__title',)
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Location, LocationAdmin)
 admin.site.register(Post, PostAdmin)
+admin.site.register(Comment, CommentAdmin)
