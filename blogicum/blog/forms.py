@@ -3,8 +3,6 @@ from django.contrib.auth.models import User
 
 from blog.models import Comment, Post
 
-# Спасибо за ревью!
-
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -22,4 +20,4 @@ class ProfileForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ('text',)
+        fields = ('text',)  # Спасибо за ревью!
