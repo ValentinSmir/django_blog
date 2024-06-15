@@ -57,7 +57,6 @@ class CategoryPostsListView(ListView):
     def get_queryset(self):
         category = get_object_or_404(Category, is_published=True,
                                      slug=self.kwargs.get('category_slug'))
-        #return category.posts(manager='published').all()
         return Post.objects.filter(category=category, is_published=True,
                                    pub_date__lte=timezone.now())
 
