@@ -55,8 +55,9 @@ class CategoryPostsListView(ListView):
     slug_url_kwarg = 'category_slug'
 
     def get_queryset(self):
-        category = get_object_or_404(Category,
+        category = get_object_or_404(Category, is_published=True,
                                      slug=self.kwargs.get('category_slug'))
+        #return category.posts(manager='published').all()
         return Post.objects.filter(category=category, is_published=True,
                                    pub_date__lte=timezone.now())
 
@@ -77,7 +78,7 @@ class ShowProfileView(ListView):
 
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
-        posts = Post.objects.annotate(
+        posts = user.posts.annotate(
             comment_count=Count('comments')).filter(
                 author=user).order_by('-pub_date')
         if self.request.user != user:
